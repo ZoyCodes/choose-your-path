@@ -1,9 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { Round, OptionKey } from '@choose-your-path/contracts';
 
+// TODO: Make configurable via environment variable when scheduler is added
+const ROUND_DURATION_MS = 20 * 60 * 1000; // 20 minutes
+
 export function createInitialRound(): Round {
   const now = new Date();
-  const closesAt = new Date(now.getTime() + 20 * 60 * 1000); // 20 minutes from now
+  const closesAt = new Date(now.getTime() + ROUND_DURATION_MS);
   return {
     nodeId: uuidv4(),
     sceneText: "You stand at a crossroads. Two paths diverge before you.",
