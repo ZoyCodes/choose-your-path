@@ -1,0 +1,13 @@
+{
+  "name": "choose-your-path",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "build": "pnpm --filter contracts build && pnpm --filter api build && pnpm --filter web build",
+    "test": "pnpm --filter api test",
+    "deploy:dev": "cd infra/terraform && terraform apply -auto-approve"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
