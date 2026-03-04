@@ -1,8 +1,8 @@
-import { v4 as uuidv4 } from 'uuid';
-import type { Round, OptionKey } from '@choose-your-path/contracts';
+import { v4 as uuidv4 } from "uuid";
+import type { Round, OptionKey } from "@choose-your-path/contracts";
 
 // TODO: Make configurable via environment variable when scheduler is added
-const ROUND_DURATION_MS = 20 * 60 * 1000; // 20 minutes
+const ROUND_DURATION_MS = 20 * 1000; // 20 seconds
 
 export function createInitialRound(): Round {
   const now = new Date();
@@ -24,7 +24,7 @@ export function createInitialRound(): Round {
 export function acceptVote(
   round: Round,
   _voterId: string,
-  optionKey: OptionKey
+  optionKey: OptionKey,
 ): Round {
   if (round.status === "CLOSED") {
     throw new Error("Round is already closed");
