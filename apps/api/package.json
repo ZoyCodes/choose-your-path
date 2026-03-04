@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev": "API_REPO=memory sh -c \"tsc && tsc --watch --preserveWatchOutput & node --watch dist/local/server.js\"",
     "build": "tsc",
     "test": "jest --passWithNoTests",
     "typecheck": "tsc --noEmit"

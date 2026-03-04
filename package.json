@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api dev",
     "build": "pnpm --filter contracts build && pnpm --filter api build && pnpm --filter web build",
     "test": "pnpm --filter api test",
     "deploy:dev": "cd infra/terraform && terraform apply -auto-approve"

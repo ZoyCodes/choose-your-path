@@ -1,10 +1,11 @@
 import type { APIGatewayProxyHandlerV2 } from 'aws-lambda';
-import { getRound, putRound } from '../db/dynamodb';
+import { getRoundRepo } from '../repo';
 import { closeRound } from '../core/roundEngine';
 import type { CloseRoundResponse } from '@choose-your-path/contracts';
 
 export const handler: APIGatewayProxyHandlerV2 = async () => {
-  const round = await getRound();
+  const repo = getRoundRepo();
+  const round = await repo.getRound();
   if (!round) {
     return {
       statusCode: 404,
@@ -14,7 +15,7 @@ export const handler: APIGatewayProxyHandlerV2 = async () => {
   }
 
   const closed = closeRound(round, new Date());
-  await putRound(closed);
+  await repo.putRound(closed);
 
   const body: CloseRoundResponse = { round: closed };
   return {

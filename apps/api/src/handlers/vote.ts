@@ -1,8 +1,9 @@
 import type { APIGatewayProxyHandlerV2 } from 'aws-lambda';
-import { getRound, atomicVote } from '../db/dynamodb';
+import { getRoundRepo } from '../repo';
 import type { VoteRequest, VoteResponse } from '@choose-your-path/contracts';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
+  const repo = getRoundRepo();
   const body = JSON.parse(event.body ?? '{}') as Partial<VoteRequest>;
   const { voterId, optionKey } = body;
 
@@ -14,7 +15,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     };
   }
 
-  const round = await getRound();
+  const round = await repo.getRound();
   if (!round) {
     return {
       statusCode: 404,
@@ -32,7 +33,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   }
 
   try {
-    const counts = await atomicVote(round.nodeId, voterId, optionKey);
+    const counts = await repo.atomicVote(round.nodeId, voterId, optionKey);
     const response: VoteResponse = counts;
     return {
       statusCode: 200,

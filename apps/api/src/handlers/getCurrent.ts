@@ -1,14 +1,15 @@
 import type { APIGatewayProxyHandlerV2 } from 'aws-lambda';
-import { getRound, putRound } from '../db/dynamodb';
+import { getRoundRepo } from '../repo';
 import { createInitialRound } from '../core/roundEngine';
 import type { CurrentRoundResponse } from '@choose-your-path/contracts';
 
 export const handler: APIGatewayProxyHandlerV2 = async () => {
-  let round = await getRound();
+  const repo = getRoundRepo();
+  let round = await repo.getRound();
 
   if (!round) {
     round = createInitialRound();
-    await putRound(round);
+    await repo.putRound(round);
   }
 
   const body: CurrentRoundResponse = { round };
