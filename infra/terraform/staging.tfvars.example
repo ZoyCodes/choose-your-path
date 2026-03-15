@@ -1,0 +1,29 @@
+# Copy this file to staging.tfvars and customize values for your staging environment.
+# Example:
+#   cp staging.tfvars.example staging.tfvars
+
+environment = "staging"
+
+# Outbound lifecycle webhook destination (enables SQS -> webhook worker mapping)
+webhook_target_url = "https://staging-hooks.example.com/choose-your-path"
+
+# Email to subscribe to the auto-created alarm SNS topic
+alarm_email_endpoint = "alerts-staging@example.com"
+
+# Lambda runtime for API handlers
+lambda_runtime = "nodejs20.x"
+
+# API CORS settings (restrict to your staging web app domain)
+api_cors_allow_origins = ["https://staging.chooseyourpath.example.com"]
+api_cors_allow_methods = ["GET", "POST", "OPTIONS"]
+api_cors_allow_headers = ["Content-Type", "Authorization"]
+api_cors_max_age_seconds = 300
+
+# Step Functions retry tuning for lifecycle tick invokes
+round_tick_retry_interval_seconds = 1
+round_tick_retry_backoff_rate = 2
+round_tick_retry_max_attempts = 3
+
+# CloudWatch alarm timing
+alarm_period_seconds = 60
+alarm_evaluation_periods = 1

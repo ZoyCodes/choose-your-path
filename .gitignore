@@ -1,0 +1,12 @@
+node_modules
+dist
+.terraform
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+infra/terraform/*.tfvars
+!infra/terraform/*.tfvars.example
+*.js.map
+coverage
+.env
+*.zip
