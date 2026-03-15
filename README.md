@@ -79,9 +79,9 @@ aws stepfunctions stop-execution \
 ## Operational Notes
 
 - Alarm notifications are wired to SNS automatically:
-   - If `alarm_topic_arn` is provided, alarms use that topic.
-   - If `alarm_topic_arn` is empty, Terraform creates `choose-your-path-alarms-<environment>` and wires alarms to it.
-   - Optionally set `alarm_email_endpoint` to auto-subscribe an email address to the auto-created topic.
+  - If `alarm_topic_arn` is provided, alarms use that topic.
+  - If `alarm_topic_arn` is empty, Terraform creates `choose-your-path-alarms-<environment>` and wires alarms to it.
+  - Optionally set `alarm_email_endpoint` to auto-subscribe an email address to the auto-created topic.
 - Lambda runtime is configurable with `lambda_runtime`.
 - API CORS settings are configurable with `api_cors_allow_origins`, `api_cors_allow_methods`, `api_cors_allow_headers`, and `api_cors_max_age_seconds`.
 - Step Functions retry behavior is configurable with `round_tick_retry_interval_seconds`, `round_tick_retry_backoff_rate`, and `round_tick_retry_max_attempts`.
@@ -89,9 +89,9 @@ aws stepfunctions stop-execution \
 - Set `webhook_target_url` for environments where webhook delivery should be active.
 - The SQS-to-Lambda webhook delivery mapping is only created when `webhook_target_url` is non-empty.
 - Key alarms provisioned:
-   - webhook DLQ visible messages
-   - webhook queue oldest message age
-   - round tick Step Functions execution failures
+  - webhook DLQ visible messages
+  - webhook queue oldest message age
+  - round tick Step Functions execution failures
 - Lambda CloudWatch log groups are managed with configurable retention (`log_retention_days`).
 
 ## Terraform Environment Files

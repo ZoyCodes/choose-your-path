@@ -1,9 +1,9 @@
-import { createHmac } from 'crypto';
-import type { SQSBatchResponse, SQSEvent } from 'aws-lambda';
+import { createHmac } from "crypto";
+import type { SQSBatchResponse, SQSEvent } from "aws-lambda";
 import {
   SecretsManagerClient,
   GetSecretValueCommand,
-} from '@aws-sdk/client-secrets-manager';
+} from "@aws-sdk/client-secrets-manager";
 
 const secretsClient = new SecretsManagerClient({});
 
@@ -34,7 +34,7 @@ async function getSigningSecret(): Promise<string | null> {
   );
 
   if (!response.SecretString) {
-    throw new Error('Webhook signing secret is missing or binary-encoded');
+    throw new Error("Webhook signing secret is missing or binary-encoded");
   }
 
   cachedSigningSecret = response.SecretString;
@@ -42,7 +42,9 @@ async function getSigningSecret(): Promise<string | null> {
 }
 
 function createSignature(body: string, secret: string): string {
-  const digest = createHmac('sha256', secret).update(body, 'utf8').digest('hex');
+  const digest = createHmac("sha256", secret)
+    .update(body, "utf8")
+    .digest("hex");
   return `sha256=${digest}`;
 }
 
@@ -55,18 +57,18 @@ async function deliverMessage(targetUrl: string, body: string): Promise<void> {
   };
 
   const headers: Record<string, string> = {
-    'content-type': 'application/json',
-    'x-cyp-event-type': payload.eventType ?? 'unknown',
-    'x-cyp-event-id': payload.eventId ?? '',
-    'x-cyp-event-version': payload.eventVersion ?? 'v1',
+    "content-type": "application/json",
+    "x-cyp-event-type": payload.eventType ?? "unknown",
+    "x-cyp-event-id": payload.eventId ?? "",
+    "x-cyp-event-version": payload.eventVersion ?? "v1",
   };
 
   if (signingSecret) {
-    headers['x-cyp-signature'] = createSignature(body, signingSecret);
+    headers["x-cyp-signature"] = createSignature(body, signingSecret);
   }
 
   const response = await fetch(targetUrl, {
-    method: 'POST',
+    method: "POST",
     headers,
     body,
   });
@@ -80,16 +82,16 @@ export async function handler(event: SQSEvent): Promise<SQSBatchResponse> {
   const targetUrl = process.env.WEBHOOK_TARGET_URL?.trim();
 
   if (!targetUrl) {
-    throw new Error('WEBHOOK_TARGET_URL is required for webhook delivery');
+    throw new Error("WEBHOOK_TARGET_URL is required for webhook delivery");
   }
 
-  const failures: SQSBatchResponse['batchItemFailures'] = [];
+  const failures: SQSBatchResponse["batchItemFailures"] = [];
 
   for (const record of event.Records) {
     try {
       await deliverMessage(targetUrl, record.body);
     } catch (error) {
-      console.error('Webhook delivery failed', {
+      console.error("Webhook delivery failed", {
         messageId: record.messageId,
         error,
       });
