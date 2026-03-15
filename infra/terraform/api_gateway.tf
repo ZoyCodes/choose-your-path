@@ -3,10 +3,10 @@ resource "aws_apigatewayv2_api" "main" {
   protocol_type = "HTTP"
 
   cors_configuration {
-    allow_origins = ["*"]
-    allow_methods = ["GET", "POST", "OPTIONS"]
-    allow_headers = ["Content-Type", "Authorization"]
-    max_age       = 300
+    allow_origins = var.api_cors_allow_origins
+    allow_methods = var.api_cors_allow_methods
+    allow_headers = var.api_cors_allow_headers
+    max_age       = var.api_cors_max_age_seconds
   }
 }
 
@@ -35,7 +35,7 @@ resource "aws_lambda_permission" "get_current" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.get_current.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.main.execution_arn}/*/*"
+  source_arn    = "${aws_apigatewayv2_api.main.execution_arn}/*/GET/current"
 }
 
 # POST /vote
@@ -57,27 +57,5 @@ resource "aws_lambda_permission" "vote" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.vote.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.main.execution_arn}/*/*"
-}
-
-# POST /close
-resource "aws_apigatewayv2_integration" "close_round" {
-  api_id                 = aws_apigatewayv2_api.main.id
-  integration_type       = "AWS_PROXY"
-  integration_uri        = aws_lambda_function.close_round.invoke_arn
-  payload_format_version = "2.0"
-}
-
-resource "aws_apigatewayv2_route" "close_round" {
-  api_id    = aws_apigatewayv2_api.main.id
-  route_key = "POST /close"
-  target    = "integrations/${aws_apigatewayv2_integration.close_round.id}"
-}
-
-resource "aws_lambda_permission" "close_round" {
-  statement_id  = "AllowAPIGatewayCloseRound"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.close_round.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.main.execution_arn}/*/*"
+  source_arn    = "${aws_apigatewayv2_api.main.execution_arn}/*/POST/vote"
 }

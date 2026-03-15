@@ -1,0 +1,27 @@
+# Copy this file to dev.tfvars and customize values for your environment.
+# Example:
+#   cp dev.tfvars.example dev.tfvars
+
+# Outbound lifecycle webhook destination (enables SQS -> webhook worker mapping)
+webhook_target_url = "https://webhook.site/your-dev-endpoint"
+
+# Email to subscribe to the auto-created alarm SNS topic
+alarm_email_endpoint = "alerts@example.com"
+
+# Lambda runtime for API handlers
+lambda_runtime = "nodejs20.x"
+
+# API CORS settings
+api_cors_allow_origins = ["http://localhost:5173"]
+api_cors_allow_methods = ["GET", "POST", "OPTIONS"]
+api_cors_allow_headers = ["Content-Type", "Authorization"]
+api_cors_max_age_seconds = 300
+
+# Step Functions retry tuning for lifecycle tick invokes
+round_tick_retry_interval_seconds = 1
+round_tick_retry_backoff_rate = 2
+round_tick_retry_max_attempts = 3
+
+# CloudWatch alarm timing
+alarm_period_seconds = 60
+alarm_evaluation_periods = 1
