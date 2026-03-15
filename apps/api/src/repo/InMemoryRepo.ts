@@ -1,9 +1,9 @@
-import type { OptionKey, Round } from '@choose-your-path/contracts';
-import type { RoundRepository } from './types';
+import type { OptionKey, Round } from "@choose-your-path/contracts";
+import type { RoundRepository } from "./types";
 
 function conditionalCheckFailedError(): Error {
-  const err = new Error('ConditionalCheckFailedException');
-  err.name = 'ConditionalCheckFailedException';
+  const err = new Error("ConditionalCheckFailedException");
+  err.name = "ConditionalCheckFailedException";
   return err;
 }
 
@@ -25,9 +25,17 @@ export class InMemoryRepo implements RoundRepository {
   async atomicVote(
     nodeId: string,
     voterId: string,
-    optionKey: OptionKey
+    optionKey: OptionKey,
   ): Promise<{ votesA: number; votesB: number }> {
-    if (!this.round || this.round.nodeId !== nodeId || this.round.status !== 'OPEN') {
+    if (
+      !this.round ||
+      this.round.nodeId !== nodeId ||
+      this.round.status !== "OPEN"
+    ) {
+      throw conditionalCheckFailedError();
+    }
+
+    if (Date.now() >= new Date(this.round.closesAt).getTime()) {
       throw conditionalCheckFailedError();
     }
 
@@ -39,8 +47,8 @@ export class InMemoryRepo implements RoundRepository {
     this.voteReceipts.add(receiptKey);
     this.round = {
       ...this.round,
-      votesA: optionKey === 'A' ? this.round.votesA + 1 : this.round.votesA,
-      votesB: optionKey === 'B' ? this.round.votesB + 1 : this.round.votesB,
+      votesA: optionKey === "A" ? this.round.votesA + 1 : this.round.votesA,
+      votesB: optionKey === "B" ? this.round.votesB + 1 : this.round.votesB,
     };
 
     return { votesA: this.round.votesA, votesB: this.round.votesB };
