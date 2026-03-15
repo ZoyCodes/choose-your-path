@@ -4,6 +4,8 @@ dist
 *.tfstate
 *.tfstate.backup
 .terraform.lock.hcl
+infra/terraform/*.tfvars
+!infra/terraform/*.tfvars.example
 *.js.map
 coverage
 .env
